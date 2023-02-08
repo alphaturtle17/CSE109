@@ -1,0 +1,96 @@
+1/30/2023 Grading and compiling on the sunlab, so use it to program as well.
+
+PATH: searches inorder for commands We changed PATH in HW0 to make the current directory something that we search while compiling BASH: 
+bourne again shell, language we remote into the sunlab
+
+'man' command: manual pages to read different manuals for code.
+
+'mg -o program program.c': compiles c programs with all the warnings and other stuff you want, creates the executable file as the name you 
+	provide rather than a.out
+
+
+Why C? Weakly-typed: Can read data from memory as any type you like Flexible, puts the decision in the programmer's hand's Staticly-typed: 
+	Types are only checked at compile time Structured: Structures used to control the flow of execution Procedural: Series of well 
+	structured steps, systematic order of statements, functions, and commands. Lower level: Can directly access structures that are 
+	tied to hardware. Minimal: No ops to directly deal with strings, lists, or arrays. No help.
+
+C was created to be simple, flexible, and to trust the programmer. Provides only one way to do each operation. Fast, not necessarily 
+portable. C is at the top of benchmark times. C is used in Microsoft Windows, Linux, Mac, and Mobile
+
+'#' octothorpe loads files '#include <stdio.h>' loads header file
+
+
+2/1/2023 Introducing arguments and pointers
+
+Typical declaration for main is: int main(int argc, char *argv[]){} argc, argv are arguments (arg count arg values respectively) argv is 
+	an array of pointers.
+The very first entry in argv[] (argv[0]) is a pointer to the name of the program that was executed. ALWAYS
+
+A pointer is an address in memory. Can have a variable that contains the address to something. int x; //x is an integer variable int *xp = 
+	&x; //*xp is a pointer to type int whose initial value is equal to the address of x
+
+Segment violation: going to areas in memory that isn't allowed results in that Hard link: Multiple names for the same file.
+
+Has an array of addresses that point to the start of each string. Array of pointers.
+
+Segmentation violation: Program tried to access an area of memory tht isn't allowed to access
+
+Use double quotes to bypass whitespace as automatic displacement.
+
+Do we need a null integer before you access a memory. Fixlengthed data types need null terminator.
+
+'chmod': to change permissions
+
+64 bit addressable machines are 8 bytes.
+Not passing the array, pasing out the reference to the cell of the array.
+
+'int *ip = &array[3];' asterisk is a pointer, all addresses are 8 bytes. Doesn't matter what it points to, regardless any address on a 64 bit
+	machine is 8 bytes.
+'&': ampersand symbol: Looks for the address of something. Ampersand A mpersand. Address. Printing out the address of
+		       variable.
+'*': pointer: Points to something, used three ways. 1. Denotes a variable as a pointer. 2. If you see it before a
+		variable, it says we want to follow the reference to what it's pointing to in memory. 3. Multiplication
+
+2/6/2023
+Stdout is where standard output goes to. fprintf lets the programmer dictate where the output is being pushed to.
+
+Can cast parameters to void if you aren't using them to suppress unused parameter warnings
+
+atoi - ascii to integer.
+ascii - 8 bit char represented on a table. Must convert ascii to integer, that's what the atoi function does.
+	converts ascii characters to integers.
+
+Variables in the main function are different than variables in other functions even if they have the same name.
+
+Can specify that you want variables to be pointers, and will then expect an address, and will require you to follow the
+reference. Can use this to modify the values of variables in main from other functions, to get around the aformentioned
+note about variables in the main function.
+
+Specify type of pointer therefore able to associate the amount of bytes needed to allocate  to hold each type.
+Can step through array individually and traverse via addresses if you KNOW that something is there.
+
+Pointers almost equal arrays
+
+All three of these are equivalent ways to access memory.
+ip[3] == *(ip+3) == array[3];
+
+2/8/2023
+Registers - Memory, but not accessible memory. Only place where operations can take place. Registers are 64 bits in size. Instructions are stored
+in executable files, and need to be able to run from registers.
+
+gdb -tui --args [program] [arg1] [arg2]  - Lets you step through your program one operation at a time. Also what the lab assignment is on friday. -tui means text user interface
+	Can add break points 'break line#'
+	Use 'step' or 'next' to go through the program line by line with breakpoints.
+	Step lets you go inside that function if loaded with -g
+	Use 'print [variable]' to see what the program sees each variable as. Or add &[variable] to see address
+	Use 'set' to set a variable to a different value mid-debugging
+	$rdi shows whatever the register is at 1st. $rsi is second. Da first. The Second. Not able to access it, it's temporary. 16 fixed point
+		registers. Number of other registers for float points. Advancements in chips increase the amount of transistors, therefore increasing
+		the registers.
+	Pass pointer whenever you want to manipulate the variable.
+	Use 'watch [variable]' to get notified about change in variables.
+
+Every time you need to go out into memory to find a value it's more inefficient in time, way more clock cycles.
+Try to make access from memory go into dram and caches so they are more fast. Performance is gold.
+
+
