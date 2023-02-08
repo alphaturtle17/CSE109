@@ -90,9 +90,8 @@ gdb -tui --args [program] [arg1] [arg2]  - Lets you step through your program on
 	Pass pointer whenever you want to manipulate the variable.
 	Use 'watch [variable]' to get notified about change in variables.
 
-	There's a proficiency test for gdb so learn it
+	There's a proficiency test for gdb so learn it. It will be important.
 
 Every time you need to go out into memory to find a value it's more inefficient in time, way more clock cycles.
 Try to make access from memory go into dram and caches so they are more fast. Performance is gold.
-
 
