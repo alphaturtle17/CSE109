@@ -94,4 +94,3 @@ gdb -tui --args [program] [arg1] [arg2]  - Lets you step through your program on
 
 Every time you need to go out into memory to find a value it's more inefficient in time, way more clock cycles.
 Try to make access from memory go into dram and caches so they are more fast. Performance is gold.
-
