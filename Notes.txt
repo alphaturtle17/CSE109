@@ -94,3 +94,163 @@ gdb -tui --args [program] [arg1] [arg2]  - Lets you step through your program on
 
 Every time you need to go out into memory to find a value it's more inefficient in time, way more clock cycles.
 Try to make access from memory go into dram and caches so they are more fast. Performance is gold.
+
+2/13/2023
+
+We can modify variables in the other function by passing in the address & and de referencing the variable * and changing that.
+Just like creating ssh key pair you need to upload the key pair in gitlab as well.
+(See switch4.c in labs)
+
+'Which' is looking for executables
+
+2/15/2023
+Programs in Memory, Dynamic Memory Allocation, and Valgrind
+
+In C you must allocate the memory.
+What is the difference between static and dynamic memory allocation
+
+Static is allocated before the program runs
+Dynamic is allocated after the program runs
+	Running a program and allocate space as new information is coming in
+		Saves space
+
+How do we allocate dynamically?
+
+When we execute a program, working with the OS it loads portions of the executable file into memory
+and create a virtual memory allocation/representation. 
+	Usually around address 0x400000
+
+Every program gets placed in its' own memory space.
+When the program starts to execute through main, it has to go and get the bytes from memory that represents the instructions on the microprocessor.
+	Must map from virtual to physical memory.
+
+As we're going to call a function, information goes on the stack, either popped or ignored and builds it.
+Text is the lowest address in the stack, top of the stack command line arguments is the highest address.
+
+Stack is a data structure and behaves like so. 
+
+C Program memory:
+1. Text or code segment (program code, values used to initialize global and static variables)
+2. Data segment in 2 parts (Initialized variables themselves, global static, and constant data and uninitialized data)
+
+When program is loaded at execution time, the C runtime environment is created and the values of initialized variables from the code (text) segment are placed into respective actual addresses (in RAM)
+
+Stack is a region of memory used for temporary variables.
+	Local variables are automatically created on the stack
+	Grows/shrinks as functions push and pop local variables
+	Variables are allocated and freed automatically
+	Limited in size
+	Stack variables only exist while function/block is running
+Heap is a large region of memory for all types of variables.
+	Programmer eeds to allocate memory on the heap
+	Programmer needs to free memory or else memory leaks
+	Heap variables are global
+	Need to use pointers.
+
+If you're never de-allocating heap space you could eventually run out of memory.
+	(Garbage collection)
+	Valgrind is a tool that helps show garbage collection I think
+
+Pro/Con List (Stack+Heap)
+
+Stack:
+	Fast access, don't have to explicitly deallocate free variables
+	Space managed efficiency by CPU, memory won't become fragmented
+	Local variables only
+	Limit on stack size (OS dependent)
+	Variables cannot be resized
+		Could mess up addressesif supported
+Heap:
+	Variables can be accessed globally
+	No limit on memory size (kinda)
+	Relatively slower access
+	No guaranteed efficient use of space, memory may become fragmented
+	Programmer must manage memory (allocate/free variables)
+	Variables can be resized
+		Just need to go to different place with enough memory, make a deepcopy then 
+
+Contiguous memory addresses are useful for time complexity and keeping pointer arithmetic correct
+
+Memory needed is not know during compile time
+Needed when a function returns a poitner to a structure created by the function
+
+'man malloc'
+Allocating Memory:
+malloc - memory allocation
+realloc - reallocation memory
+free - free memory
+sizeof - construct to return size of any object
+calloc - clear (set to 0) memory allocation
+#include <stdlib.h>
+
+Prototype function:
+	Contains name of function
+	List of parameters
+	Number/Types
+	What the function is to return (else void)
+
+size_t is used to identify the size of something in bytes, so it isn't confined by the amount of bytes allowed to allocate other data types.
+
+malloc returns void because it's just a pointer, and allows you to typecast
+We want to typecast so we know how many bytes we're pointing to. 
+
+int *arraypointer = (int*malloc) 100;
+
+If we want to free up memory that we already malloc'd free(*arraypointer);
+calloc clear alloc, combines the operations of malloc and sets the space to 0.
+When we're done programming something, we need to take responsibility to free that memory.
+
+realloc() changes the size of memory block pointer to ptr to size bytes to a new location
+	Unpredictable Performance
+sizeof() returns the size of any object referred to.
+Different mechanisms associated with the blocks of allocated memory. Through the memory manager, we can access that memory.
+
+Fundamentally the same thing as just declaring allocation.
+This dynamic allocation will persist and can be globally accessed, can be resized, can be dynamic, and such.
+
+"Static" allocation of space is straightforward, with variables or arrays declared locally or globally
+char myarray[1000];
+char *ptr=NULL;
+for (ptr=myarray; (ptr-myarray) < 1000; ptr++)
+   // do something with each entry of myarray
+Dynamic allocation asks the OS for space for the pointer to access
+#include <stdlib.h>
+char *myarray = NULL;
+char *ptr = NULL;
+myarray = (char *)malloc(1000);  // 1000 in bytes, can be a variable
+for (ptr=myarray; (ptr-myarray) < 1000; ptr++)
+   // do something with each entry of myarray
+
+No check for if malloc fails.
+
+(Implementation of malloc and memory allocation functions)
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+   char *str;
+
+   /* Initial memory allocation */
+   str = (char *)malloc(15);   /* 15 is # of bytes (works for char) */
+   strcpy(str, "Dr.ErleTotally");
+   fprintf(stdout, "String = %s,  Address = %u\n", str, str);
+
+   /* Reallocating memory */
+   str = (char *)realloc(str, 25);
+   strcat(str, "Rocks!");
+   fprintf(stdout, "String = %s,  Address = %u\n", str, str);
+
+   free(str);
+   return(0);
+}
+
+Unsafe functions in C could overrun space and go beyond and courrupting data that wasn't supposed to be changed.
+
+C allows you to go to any pointer beyond what you allocated.
+
+One byte more than the string length if you are copying a string
+In general, you want the number of objects times the size of an object
+So if we were allocating an array of ints, rather than 1-byte chars:
+int *ip = (int *)malloc(1000 * sizeof(int));
+sizeof is an operator that determines the size of the data type passed as the parameter
+Note that just like an array, it is easy to have a pointer (or array index) exceed the allocated space (and cause problems)
