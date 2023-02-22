@@ -255,3 +255,129 @@ int *ip = (int *)malloc(1000 * sizeof(int));
 sizeof is an operator that determines the size of the data type passed as the parameter
 Note that just like an array, it is easy to have a pointer (or array index) exceed the allocated space (and cause problems)
 
+2/20/2023 - Virtual Class
+
+When facing development of a larger program, you need to organize how to manage how to develop in separate files.
+Reused or organized so they can be used on other projects: top-down development.
+
+Create 'skeleton' of the entire program and step into each function to see what you need to do.
+
+Top-down development: Simple main function that calls other (initially abstract functions) and see how to implement functions so the whole program can be filed and simple testing can be performed.
+
+Bottom-up development: Identify key low-level needs and building functions to provide the services, while also testing code to exercise functions and verify correctness.
+
+Divide-and-conquer: Especially useful when coding in groups, might just share object files with each other (w/ documentation on how to use it)
+
+Use combination of the three.
+
+Modular approach. Know and test specific functions, and don't have to worry about getting the exact variables and functionality.
+	Allows to test smaller functions more robust and can implement functionality.
+	Debugging also can narrow down the development bugs in order to diagnose each problem.
+If you can see the entire algorithm on one screen, it's better to develop in time. 
+
+Can use combination of compiler options and 'make' command.
+	man make !!!
+
+Very good to use multiple source code files, saves time, reduces errors.
+
+Can stop compiler before creating an executable, and that not-ready-to-execute binary file can be linked with similar files to create a larger, fully complete executable file.
+
+Continue to use mg, but can do other stuff.
+
+Compiler options of interest:
+	-Wall
+	-Wextra (can flag legitimate code)
+	-Wwrite-strings
+	-g inserts debug information into executable
+	-c creates a relocatable object file (not executable)
+
+Compiling is not a single step:
+	preprocessing: processes include files, conditional compilation instructions, macros
+	compilation: takes output of preprocessor and source code and generates assembler source code
+		gcc -s produces .s file
+	assembly: takes the assembler source code and produces an assembly listing with offsets stored in an object file
+		gcc -c t produce .o file
+	linking: takes one or more object files or libraries as input and combines them to produce a single executable file
+	Use -save-temps to save all intermediate files
+
+
+Relocatable object file (.o)
+	Contains code and data in a form that can be combined with other relocatable object files to form an executable object file.
+	Each .o file is produced from exactly one source (.c) file.
+
+Executable object file (a.out)
+	Contains code and data in a form that can be copied directly into memory and then executed
+
+Shared object file (.so)
+	Special type of relocatable object file that can be loaded into memory and linked dynamically at load or runtime.
+	Dynamic Link Libraries by windows (DLL).
+
+All object files have a standard binary format.
+One unified format for .o, a.out, .so:
+	ELF binaries (executable and linkable format)
+
+gcc -save-temps "blah.c": Shows the different temp object files
+
+Make utility and Makefiles
+	With medium to large projects containing many files it's difficult to
+		Type commands to compile all the files correctly each time
+		Keep track of which files have been changed
+		Keep track of files' dependencies on other files
+	The make utility automates this process.
+
+make is utility, makefile or Makefile contents.
+target:prerequisite
+	recipe	<-- must be preceded by tab
+
+Target is file to be generated, usually an executable or object file, and can simply be named of recipe
+Prerequisite is zero or more files used to create the target (dependencies)
+Recipe is one or more system commands that create the target or achieve the desired result and can span lines.
+
+Makefiles can compile specific changes something and makes its way through the hierarchy instead of the thing, and can compile the things more efficiently.
+
+Forces the intermediate files to be deleted, and then running 'make clean' goes in the top level ones and removes the executable and all .o files
+clean:
+	rm -f *.o
+	rm -f prog
+
+Good programming practices as to do well on the programming projects:
+Organization & Readability
+	Code written in a modular fashion
+	Variables are given meaningful names
+	Consistent indentation used for blocks (besides curly braces who cares bout those)
+	Functions should generally not exceed one screen, limited to specific purpose/calculation/allocation
+	Use stevens-style wrapper functions to make system calls and embed error checking
+	Comments are added to describe logic within a block of code.
+	Assignment-specific requirements if any, were followed.
+
+Robustness & Efficiency
+	Error checking is done wherever possible
+	Checking/handling of short counts is performed
+	Check every function for failure codes (especially system calls)
+	Keep variables' scopes as small as possible (narrow/limited)
+	Initialize all variables especially pointers
+	Functions created such that code blocks are not duplicated
+	Fixed loop bounds are determined prior to entering loop
+	Assignment-specific requirements are followed
+
+Strongly consider top-down approach:
+	Develop algorithm first (think)
+	Create a simple main function with function calls and very little logic
+	Create function shells
+	Add logic to the function shells slowly and test as you go allocating
+	Test thoroughly as notable changes come allocating
+	Push changes to repo after each notable change
+
+Defensive programming:
+	Larger the project, the more difficult finding subtle errors becomes
+	Code defensively by:
+		Checking every funciton for failure codes (esp system calls)
+		Keep variables' scopes as small and narrow as possible
+		Initialize all variables, especially pointers
+		Write testing harnesses for all functions
+		Document carefully and describe all assumptions for values passed as parameters to your functions
+		Verify parameters are valid before you use them
+		Use assert liberally to enforce those assumptions
+
+
+
