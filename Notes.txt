@@ -379,5 +379,81 @@ Defensive programming:
 		Verify parameters are valid before you use them
 		Use assert liberally to enforce those assumptions
 
+2/22/2023 - Small slide deck for some reason
 
+Position ourselves to learn ourselves. Taught to teach ourselves, and need to learn from ourselves and our resources.
+Type out what we need to do. Think before we code, top-down approach.
+Start things earlier, begin processing, and read through multiple times.
 
+"It's not that they don't care, but you're always under a time constraing. Decide what you can and cannot get to."
+
+Using make files to pull in and stuff maybe next.
+It's not about the money, it's about the message.
+
+System call
+Executing instance of a program.
+By default all programs execute in user mode.
+In order to interact with file system or other restsricted systems or functionalities, a C program must invoke a system call
+	A system call can be devined as a request to the operating system to do something on bejalf of the program.
+	During execution of a system call, the mode is changed from user mode to kernel mode (aka system mode)
+The kernal is the core of the OS program and has control over everything; which is why all other software has to make requests of the OS/Kernel (like to create new processes and manage i/o)
+
+'sleep n' command pauses command for a certain number of seconds.
+
+Can interact with other systems. Ex. cd /proc 
+'getenv' reads the user's environment space. Accessing information regarding the user, so it's not really a system call.
+
+System call examples:
+creat( ), open( ), close( ) – managing I/O channels
+read( ), write( ) – handling input and output operations
+lseek( ) – for random access of files
+link( ), unlink( ) – aliasing and removing files
+stat( ) – getting file status
+access( ), chmod( ), chown( ) – for access control
+exec( ), fork( ), wait( ), exit( ) – for process control
+getuid( ) – for process ownership
+getpid( ) – for process ID
+signal( ) , kill( ), alarm( ) – for process control
+chdir( ) – for changing working directory
+mmap(), shmget(), mprotect(), mlock() – manipulate low level memory attributes
+time(), gettimer(), settimer(),settimeofday(), alarm() – time management functions
+pipe( ) – for creating inter-process communication 
+
+Mentioned about being 'vertically conservative'
+	See your whole function on one screen 
+	Apply modular programming techniques
+	
+Wrap system calls.
+	Might get error codes.
+	Check return value from calls.
+
+With system calls, you should always check the return values.
+Error handling.
+Save space by using "stevens-style wrapping"
+	Only one line of code for system calls, rather than a bunch of them.
+	Create a new function, call it the same as your old system call function, but differentiate with a capital letter.
+
+in wrappers.h:
+
+void *Malloc(size_t, size); //declaration, no definition no description, just declaring that the wrapped function exists.
+
+in wrappers.c:
+
+void *Malloc(size_t size){ //actually have the functionality in here
+	void *ptr = NULL; //or 0
+	if((ptr = malloc(size)) == NULL){ //can put our check in the line
+		//must have an error, error handling goes here
+		//Print some message and exit with nonzero return code
+		//Unique message strerror(errno) shows the string error for error number.
+		fprintf(stderr, "Could not allocate space for %ld bytes - %s", size, strerror(errno));
+	}
+	//Must be non error condition
+	return ptr;
+}
+
+For program convention in linux, return 0 if things are right, nonzero if things are incorrect
+We can have different reasons on why the program fails, if we return 0 when fails, there's no way to distinguish what error occured.
+
+stdout is the default standard out. 
+stdin is the same terminal/console that you write the program in.
+stderr is the standard error stream, could be something different.
