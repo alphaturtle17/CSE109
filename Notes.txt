@@ -254,3 +254,4 @@ So if we were allocating an array of ints, rather than 1-byte chars:
 int *ip = (int *)malloc(1000 * sizeof(int));
 sizeof is an operator that determines the size of the data type passed as the parameter
 Note that just like an array, it is easy to have a pointer (or array index) exceed the allocated space (and cause problems)
+
