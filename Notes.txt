@@ -454,6 +454,29 @@ void *Malloc(size_t size){ //actually have the functionality in here
 For program convention in linux, return 0 if things are right, nonzero if things are incorrect
 We can have different reasons on why the program fails, if we return 0 when fails, there's no way to distinguish what error occured.
 
-stdout is the default standard out. 
+stdout is the default standard out.
 stdin is the same terminal/console that you write the program in.
 stderr is the standard error stream, could be something different.
+
+2/27/2023
+makefile is control file to identify dependencies and recipies in order to create one or more outputs or targets.
+
+When working with modular files, header or source code incorporations doesn't need to worry about what may have changed and automatically 
+	calls appropriate recipies in order to construct the program.
+
+Other tools to do the same compilation, but make is a good intro to "dependency management" in the Linux OS
+
+Access struggle:
+	Wouldn't let you use the access command in the .h file.
+	Look at return codes, not error if file given. Wants to process but know it isn't an executable.
+
+System calls: functionality that our user process does not have access to directly, interacting with the OS to find that functionality.
+
+Equally valid for code writing for error checking and handling in one file source code. 
+
+Assume nonzero non null pointer, pass that and assume that free works correctly
+
+Incude-guard. Guards against the process including something more than one time.
+
+sizeof.c 
+
