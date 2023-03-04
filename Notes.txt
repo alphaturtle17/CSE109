@@ -80,6 +80,7 @@ in executable files, and need to be able to run from registers.
 
 gdb -tui --args [program] [arg1] [arg2]  - Lets you step through your program one operation at a time. Also what the lab assignment is on friday. -tui means text user interface
 	Can add break points 'break line#'
+		Breakpoints stop and doesn't execute the line that it breaks at
 	Use 'step' or 'next' to go through the program line by line with breakpoints.
 	Step lets you go inside that function if loaded with -g
 	Use 'print [variable]' to see what the program sees each variable as. Or add &[variable] to see address
@@ -478,5 +479,61 @@ Assume nonzero non null pointer, pass that and assume that free works correctly
 
 Incude-guard. Guards against the process including something more than one time.
 
-sizeof.c 
+<sizeof.c>
 
+3/1/2023
+Left off allocating space, sizeof.c, and introduced valgrind.
+
+Valgrind: Can check memory leaks.
+	Memory leak: allocate memory dynamically and doesn't free it when done using it.
+	int *pointer = (int) malloc(1024);
+	free(pointer); (no)
+
+Why do we need to free it for our program.
+	Consuming finite resource and will eventually run out.
+	Eventually will try to allocate memory, malloc fails, and results in the end of the program.
+
+How much space do we have?
+Dynamic memory allocation happens on the Heap.
+
+Mapping from virtual memory to physical memory happens...? *probably do more research for this.
+
+Pointer is an address, 64 bit machine, so addresses are 8 bytes, so we expect pointers to be 8 bytes each in the sunlab environment.
+
+"When submitting, compile and test on sunlab"
+He's obsessed with linux and vi
+
+Interprocessed communication will be covered later. *Maybe look up before we get to that
+PowerShell better than cmd, not better than linux BASH.
+	Erle script course.
+
+Can write your own signal handler. Handle different signals. How to write signal handler? (CSE202)
+Prefer fprintf because you can write to different things (line 457)
+
+Time limit of mastery of gdb, meet with TA/Grader demonstration, in the next few weeks.
+
+(sizeof.c)
+Prototypes need to be before we use it, so the compiler read it already and doesn't get confusedington.
+Passed in address (*intptr) dereference, grab value, multiply by 2, add x.
+Modular programming. Create header file with all prototypes, then C source code file with definition, then #include ".h" file to call it in program.
+
+C pass by value!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+3/4/2023
+(thank you montella)
+Here is a short reference of what the various file types mean:
+
+- `.h` - C Header file
+- `.c` - C Source
+- `.i` - C preprocesor output
+- `.s` - Assembly
+- `.o` - Object Code
+- `.a` - Object Archive
+
+1. The C preprocessor - cpp
+2. The C frontend - cc
+3. The assembler - as
+4. The linker - ld
+
+Can write output to certain files by using '> [filename.ext]' after the call to find output.
+ex. hexdump -C main.o > mainHexDump.txt creates a text file of the filled hexdump of the object file main.o
