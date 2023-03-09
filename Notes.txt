@@ -1,3 +1,9 @@
+Thor Long
+Spring 2023
+CSE 109 Classroom Notes
+
+_________________
+
 1/30/2023 Grading and compiling on the sunlab, so use it to program as well.
 
 PATH: searches inorder for commands We changed PATH in HW0 to make the current directory something that we search while compiling BASH: 
@@ -537,3 +543,44 @@ Here is a short reference of what the various file types mean:
 
 Can write output to certain files by using '> [filename.ext]' after the call to find output.
 ex. hexdump -C main.o > mainHexDump.txt creates a text file of the filled hexdump of the object file main.o
+
+3/8/2023 - 
+#include <stdbool.h> booleans in C!
+
+char *envp[] does the same thing as char* path = getenv("PATH");
+	Can definitely use this, also without a need to use the split function.
+
+Understand the code (and questions about the assignment) for midterm.
+	Understand what you should have had done.
+
+"What's wrong with this code"
+Don't have to specify the variable name, just the types.
+
+Be familiar with man pages, prototypes, and steven-style wrappers, return values, error conditions, etc.
+
+Hex arithmetic:
+	Computers are base 2 (transistors 0 and 1)
+	Base 16, 16 different values for numbers, 4 bit chunks.
+		Each character represents 4 binary bits.
+		Range from 0-15
+		0-9 a  b  c  d  e  f
+		0-9 10 11 12 13 14 15
+		f-e = 1
+		16c0 - 02a0
+
+Indexing and printing things out in lab 4.
+Look at lab4 for pointers and array syntax etc. Use lab3 for memory allocation and de allocation.
+
+Next programming assignment
+HASH TABLE IMPLEMENTATION IN C??!!??!!
+	oh no
+
+Exam format:
+	Involve conceptual questions
+	Look at the code: 
+		What is wrong
+		What is return
+	Makefiles
+	Review HW and Labs (All of em)
+	Pencil + Paper
+	
