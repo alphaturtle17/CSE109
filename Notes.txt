@@ -156,7 +156,7 @@ Heap is a large region of memory for all types of variables.
 
 If you're never de-allocating heap space you could eventually run out of memory.
 	(Garbage collection)
-	Valgrind is a tool that helps show garbage collection I think
+	Valgrind is a tool that helps show garbage collection
 
 Pro/Con List (Stack+Heap)
 
@@ -166,7 +166,7 @@ Stack:
 	Local variables only
 	Limit on stack size (OS dependent)
 	Variables cannot be resized
-		Could mess up addressesif supported
+		Could mess up addresses if supported
 Heap:
 	Variables can be accessed globally
 	No limit on memory size (kinda)
@@ -584,3 +584,169 @@ Exam format:
 	Review HW and Labs (All of em)
 	Pencil + Paper
 	
+
+3/20/2023 - Files and File I/O
+
+Take notes and stuff. Will go through the exam as needed, 5-10 minute warning and look over a few exam questions.
+	Exams are not cumulative
+	EXCEPT reinforce questions not done well on midterm, and ask the same question.
+	Review second half of the course and the midterm material.
+
+Overview: File types, text v binary, standard I/O functions, buffered I/O
+
+In Linux everything is a file.
+
+Each file has a type, indicating the role
+	Regular file (text or binary): Contains arbitrary data
+	Directories: Index for a related group of files
+	Socket: Communicating with a process on another machine
+
+Other file types beyond our scope:
+	Named pipes (FIFOs)
+	Symbolic links
+	Character and block devices
+
+Text vs Binary 'Regular' Files
+	Text file contains textual information in the form of alphabets, digits, and special characters or symbols that are human readable (ASCII)
+	Binary file contains a collection of bytes not intended to be human-readable
+
+Small error in text file can be recognized and eliminated
+Small error in binary file corrupts the file and is not easy to detect
+	Since the data is not human readable it also adds to the security of the content
+
+As a programmer, we need to deal with:
+	Handling newlines:
+		Newline is the end of the line, line ending, or break.
+		Usually a special character which signifies the end of the line.
+		Newline character ina a text file is converted into a carriage return-linefeed combination
+		and then written to the disk; similarly, when read by a text file the carriage return-linefeed combination is converted into a newline
+	Storage of numbers:
+		The function fprintf() is used to store numerical data on the disk; one character per byte, and as expected integers occupy 4 bytes.
+		567392 occupies 6 bytes in memory text file on disk.
+	Representation of EOF (End of File):
+		In text mode a special character with ASCII code 26 is inserted at the end of file.
+		In binary mode, we don't have any special character signifing EOF, instead track the number of characters present in the directory entry of the file.
+
+ELF - Executable and linkable format
+All object files adhere to the ELF.
+Most byte by byte basis doesn't mean anything in terms of that.
+Compression algorithm can save space, then we can uncompress that to get original functions back.
+
+C standard library (libc.so) contains higher-level standard i/o functions (appendix B of K&R)
+Ex:
+	Opening and closing files (fopen and fclose)
+	Reading and writing bytes (fread and fwrite)
+	Reading and writing text lines (fgets/getline and fputs)
+	Formatted reading and writing (fscanf and fprintf)
+
+Wants to work more with files.
+
+3 files open during every executable file.
+	stdin (descriptor 0), stdout (descriptor 1), stderr (descriptor 2) (no need to add (stored in <stdio.h>, extern FILE *stdin;). Standard input, standard output, standard error (respectively))
+	Can use fprintf to write to files. Need FULL FILE NAME. Need to open first, then can write.
+		Either with handle name or file descriptor, can write to files.
+		Descriptor value goes 0,1,2 for the three open standard writing, and +1 per new file that is opened.
+	File extention means nothing to the OS in Linux, unlike windows mapping applications to different file types.
+
+File Descriptor:
+	Non negative integer which is an index in the kernel on opened files.
+	Contained in the kernel file table or file descriptor table
+	0 = stdin, 1 = stdout, 2 = stderr
+
+File Pointer:
+	Pointer to a C structure
+		Struct is a way of aggregating multiple data objects. Simmilar to objects, but without interface with data in the methods.
+	Identifies a file, wraps the file descriptor, provides buffering functionality, EOF detection, and all other functionality needed for I/O
+	More widely used than file descriptor
+
+Can convert file pointer to file descriptor:
+	int fd = fileno(FILE *stream); // in <stdio.h>
+
+Convert file descriptor to file pointer:
+	FILE *fp = fdopen(fd, "w"); // in <stdio.h>
+
+Working with Files:
+	open, read, write, close, lseek (Unix I/O functions)
+	fopen, fread, fwrite, fclose, fseek  (C standard function; buffered)
+	fgetc, fputc
+	fgets, fputs   note: getline() uses fgets
+	fscanf, fprintf
+	Never use gets()! (No check on how many bytes you get from that file. Will read all bytes. If user never enters end, it will override bytes in your memory. Worst case scenario, will be able to run code and you will have a bad time)
+
+
+	http://web.cs.swarthmore.edu/~newhall/unixhelp/C_files.html
+
+Any file in the FILE system have authority to access. Can try to open anything, and need to work with the operating system.
+	System call, OS will try, and if returns nonzero, then there is a problem.
+
+Accessing using file pointer, uses the prefix f (like fopen).
+
+
+read v fread
+
+open, read, write, close:
+	Syscalls
+	Not formated IO, non-formatted byte statements 
+	Do not use UNIX buffer cache
+	Generally used for network programming and accessing character devices (keyboards etc)
+
+fopen, fread, fgetc, fwrite, fputc, fclose:
+	Functions of standard IO
+	Use an internal buffer
+	Formatted IO (with %) for some of them
+	Always use UNIX buffer cache
+	Generally used for general-purpose programming and accessing block devices (harddrives)
+
+Times where we WANT low level control and no buffer going on.
+
+Buffered I/O: Motivation
+	Applications often read/write one character at a time
+	getc, putc, ungetc
+	gets, fgets
+		Read line of text one character at a time, stopping at newline
+	Implementing as Unix I/O calls expensive
+	read and write require Unix kernel calls
+		> 10,000 clock cycles
+	Solution: Buffered read (fread)
+		Uses Unix read to grab block of bytes and place into a buffer
+		User input functions take one byte at a time from buffer
+	Refill buffer when empty
+
+Standard I/O functions use buffered I/O
+	Graphic on L7 slide 12
+Buffer flushed to output fd on "\n", call to fflush or exit, or return from main.
+
+Sometimes see segment fault, and didn't get the thing to be flushed to standard out, so never saw it. (gdb -tui executable) (saw before)
+	Can force flushing by using the newline character, or calling fflush to flush the buffer, or direct output to stderr since it doesn't have the same buffering that stdout has.
+
+Rather than waiting for complete executable statements in their entirety, write to the buffer and then continue. Flush (taken care of by OS) to keep executing at a good time.
+
+Performing what the user is requesing is the most important thing.
+Performance is the second most important thing.
+	Both drive companies to make more money.
+
+Why not create a variable and set it rather than #defint BUFFSIZE?
+	We're trying to examine the code itself, and having something change each time within the main method, means there is no interference from that line of code in the performance of the program.
+
+Larger = performance time is decreasing, CPU time is dropping.
+
+3/22/2023 - File Continue Slide 13
+
+FILE *fopen(char *filename, char *mode)
+	Opens the file whose name is the string pointed to by filename and associates a stream with it
+	r  - open for reading
+	w  - open for writing (file need not exist)
+	a  - open for appending (file need not exist)
+	r+ - open for reading and writing, start at beginning
+	w+ - open for reading and writing (overwrite file)
+	a+ - open for reading and writing (append if file exists)
+Example
+FILE *fp = NULL;
+if ((fp=fopen("/home/merle/dork.txt", "r")) != NULL)...
+
+int fclose(FILE *stream)
+	flushes  the stream pointed to by fp (writing any buffered output data) and closes the underlying file descriptor
+	0 if successful, EOF (macro, usually = -1) if failure
+Example
+if (fclose(fp)) fprintf(stderr, "error closing file\n”);
+
