@@ -730,7 +730,46 @@ Why not create a variable and set it rather than #defint BUFFSIZE?
 
 Larger = performance time is decreasing, CPU time is dropping.
 
+Exam:
+Why do we need to specify the data type when we declare a pointer in C?
+	The data type of the pointer is needed so accesses to memory through pointer will read the appropriate amount of bytes, and all have different needs in terms of bytes.
+
+Refer to code and respond to prompts:
+Write prototype:
+	char func(char*);
+Is the argument to func pass by value or pass by reference?
+	Pass by value, as C is a pass-by-value language. The address of the 4th character is passed to func.
+If func returns a value of 0, what is the output of the printf statement?
+	the exam
+
 3/22/2023 - File Continue Slide 13
+
+Recap:
+	Files, 6 differnt types. Focusing on regular files and directories. (Text and Binary files)
+	All 1s and 0s, but text files are interpreted (8 bits/1 byte) and maps them using ASCII and presents us with their respective representations.
+	Binary files could map to human readable stuff, but is a proprietary format that isn't intended to be human-readable.
+	Binary has no newline character, no line by line file.
+	Binary files has no EOF character. When using pointer of type file, it handles that for us. No being reliant on EOF character.
+	Buffer in terms of reading and writing. Have 
+	Lab Friday
+
+PROGRAMING IN getLine.c (notes on the program in there)
+man getLine
+C is pass by value. So, if we want to change particular variable values, we need to pass the address of the variable (already known). Unless we pass address, we can't change the actual value.
+getLine may change address of the pointer.
+ssize_t is (signed size meaning possible negative) meant to hold integer value representing the size of some object. This is sort of generic, since some systems will vary with different variables on different machines.
+
+Pointers are addresses.
+
+mail [email address]
+sends an email?????
+
+PONTER TO POINTER
+Allocating a new location on the heap to adjust the allocated length from a smaller to larger space in memory.
+Can see where the string starts and we have it at the end, and see that the newline character is stored with the buffer.
+Length picked a reasonable sized buffer for what the command line thinks that it will need to allocate.
+Notice that with the length, we see that the size of length doesn't decrease when reading subsequent smaller sizes of strings by the user.
+
 
 FILE *fopen(char *filename, char *mode)
 	Opens the file whose name is the string pointed to by filename and associates a stream with it
@@ -740,7 +779,7 @@ FILE *fopen(char *filename, char *mode)
 	r+ - open for reading and writing, start at beginning
 	w+ - open for reading and writing (overwrite file)
 	a+ - open for reading and writing (append if file exists)
-Example
+Example 
 FILE *fp = NULL;
 if ((fp=fopen("/home/merle/dork.txt", "r")) != NULL)...
 
@@ -750,3 +789,162 @@ int fclose(FILE *stream)
 Example
 if (fclose(fp)) fprintf(stderr, "error closing file\n”);
 
+3/27/2023 - 
+Shortcount -- Read in 1024 bytes at a time. Might not get that all at the same time. Possible to actually get less than you wanted to.
+
+In some situations, read/recv and write/send transfer fewer bytes than the application requests
+These short counts do not indicate an error
+They occur for a number of reasons:
+Encountering EOF on reads - suppose we are ready to read from a file that contains only 20 more bytes from the current file position, and we are reading the file in 50-byte chunks… the next
+read will return a short count of 20, and the read after that will signal EOF by returning a short count of zero
+Reading text lines from a terminal - if the open file is associated with a terminal (i.e., a keyboard and display), then each read function will transfer one text line at a time, returning a short count equal to the size of the text line
+Reading and writing network sockets - if the open file corresponds to a network socket, then internal buffering constraints and long network delays can cause read and write to return short counts.
+
+In practice, you will never encounter short counts when
+reading from disk files except on EOF
+writing to disk files except if disk is full
+However, if you want to build robust (reliable) network applications such as Web servers, then you must deal with short counts by repeatedly calling read/recv and write/send until all requested bytes have been transferred (or time out)
+So… your programs should check for short counts and handle them
+
+https://stackoverflow.com/questions/1386142/handling-partial-return-from-recv-tcp-in-c
+
+Lab5 Discussion:
+sscanf and getline
+
+Wants to be working on it, not supposted to be stressin out
+Pass an argument given a parameter.
+Stevens style wrapper and manpages should be second nature.
+	These stevens style wrapping is using the man pages to check the errors so we can use the functions with error handling
+	Need to understand what errors could happen in order to get it to work. 
+Good practice to use same variable names as the man page. Use names that reflect what variables hold. 
+
+Should have looked up the syntax for the code in runFilterFile.bash
+for example 2>|stderr.txt takes output for opened file 2 and put it to stderr.txt
+
+.bash $? means look at return code from last command. = 0 then successful because it successful.
+
+Concepts are same throughout all coding languages, but syntax is different.
+	Bash seems fun.
+makefiles create top down, if no exist, follow the thing.
+
+semicolon is delimter for linux command line bash, you can separate different commands and write them one after another
+use fgets not gets so we don't get blown up.
+In theory we don't need clean in makefile since the time stamps are already 
+
+
+Bits and Binary:
+Transistor: Designed 1947 Allentown PA Bell labs. 2 state device. 0 Voltage or 1 volt.
+
+Each bit is 0 or 1.
+By encodding and interpreting sets of bits in various ways, computers determine what to do (instructions) and represent and manipulate numbers, sets, strings, etc.
+Why bits? Electronic ImplementationEasy to store with bistable elements
+Reliably transmitted on noisy and inaccurate wires.
+
+Logic 0 (ground/zero volts)
+Logic 1(1 volt)
+Not precise in volts, but you get the jist.
+
+Fractional values imprecise.
+It makes sense to do arithmetic in base 10 now since the plethora of stuff.
+Intel IBM came out with chips that take floating point arithmetic in base 2 and base 10.
+
+Byte = 8 bits
+Binary 000000002 to 111111112
+Decimal: 010 to 25510
+Hexadecimal 0016 to FF16
+	Base 16 number representation
+	Use characters ‘0’ to ‘9’ and ‘A’ to ‘F’
+	Write FA1D37B16 in C as
+	0xFA1D37B
+	0xfa1d37b 
+In binary it's no different, just the places. 
+
+Octal is in regards to premission representations (ls -al)
+
+George Boole (19th Century)
+Boolean logic, boolean algebra.
+True = 1 False = 0.
+
+Boolean algebra
+AND& OR| NOT~ EXCLUSIVE-OR^
+
+Operate on bit vectors
+Operations applied bitwise (140 type beat)
+
+ 01101001  
+&01010101
+_________
+ 01000001
+
+
+ 01101001
+|01010101
+_________
+ 01111101
+
+
+ 01101001
+^01010101
+_________
+ 00111100
+
+
+~01010101
+_________
+ 10101010
+
+When we perform logical and arithmetic operations, condition bits are set in a register to indicate
+different parameters and bits that mean different things. 
+
+Operations &,  |,  ~,  ^ Available in C
+Apply to any “integral” data type
+	long, int, short, char, unsigned
+View arguments as bit vectors
+Arguments applied bit-wise
+
+Examples (Char data type)
+~0x41 ➙ 0xBE
+~010000012 ➙ 101111102
+~0x00 ➙ 0xFF
+~000000002 ➙ 111111112
+0x69 & 0x55 ➙ 0x41
+011010012 & 010101012 ➙ 010000012
+0x69 | 0x55 ➙ 0x7D
+011010012 | 010101012 ➙ 011111012
+
+Logical operations in C that relate to these bitwise operations (kinda).
+
+Contrast to Logical Operators
+	&&, ||, !    ⇐ logical AND, logical OR, logical NOT
+		View 0 as “False”
+		Anything nonzero as “True”
+		Always return 0 or 1
+		Early termination (for && and ||)  ⇐ Good to know!
+Examples (char data type)
+	!0x41  ➙  0x00 //any one or more bits is one, generate 0
+	!0x00  ➙  0x01
+	!!0x41  ➙  0x01
+	0x69 && 0x55  ➙  0x01
+	0x69 || 0x55  ➙  0x01
+	p && *p 	(avoids null pointer access)
+
+Shift operations
+	We can shift left by some number of bits, and it will put 0s in any bit locations that have been vacated.
+	Can do multiply by 2 by just left shifting.
+	Can do division by 2 by just right shifting.
+
+	Left Shift: 	x << y
+		Shift bit-vector x left y positions
+		Throw away extra bits on left
+		Fill with 0’s on right
+	Right Shift: 	x >> y
+		Shift bit-vector x right y positions
+		Throw away extra bits on right
+		Logical shift
+		Fill with 0’s on left
+		Arithmetic shift
+		Replicate most significant bit on left
+	Undefined Behavior	
+		Shift amount < 0 or ≥ word si
+
+Shifting right logically or arithmetically.
